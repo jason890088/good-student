@@ -1,7 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 from mysql_client import MysqlClient
-import logging
+from logger import logger
+import yaml
 
 
 class Examinee:
@@ -25,10 +26,14 @@ class Examinee:
         self.mc.set_course_id(course_id)
 
     def full_process(self):
-
+        logger.info(f'開始測驗')
         questions, answers = self.get_questions()
+        logger.info(f'成功獲取題目與答案')
         exam_result = self.do_exam(questions, answers)
+        logger.info(f'考試完成')
+        logger.info(f'開始更新題庫')
         self.save_exam_result(exam_result)
+        logger.info(f'題庫更新完成')
 
     def get_questions(self):
         url = f'https://iedu.foxconn.com/public/play/examUI?courseId={self.course_id}'
@@ -36,7 +41,6 @@ class Examinee:
 
         response = requests.request('GET', url, headers=headers)
         questions = BeautifulSoup(response.text, 'html.parser')
-        logging.info(f'{self.course_id} start')
         return questions, self.mc.get_answers()
 
     def do_exam(self, questions, answers):
@@ -65,7 +69,7 @@ class Examinee:
         response = requests.request('POST', url, headers=headers, data=payload)
         exam_result = BeautifulSoup(response.text, 'html.parser')
         scores = exam_result.select_one('div', {'class': 'exam_result'}).findNext('strong').getText()
-        print(f'成績:{scores}')
+        logger.info(f'成績:{scores}')
         return exam_result
 
     @staticmethod
@@ -76,7 +80,6 @@ class Examinee:
     def save_exam_result(self, exam_result):
         answers = []
         for question in exam_result.find_all('div', {'class': 'question_warp'}):
-            # print(question)
             answer = question.select_one('p', {'class': 'answer'}).findNext('strong')
             answers.append({
                 'question_id': question.select_one('input', {'disabled': ''}).get('name'),
@@ -95,10 +98,10 @@ class Examinee:
 
 
 def main():
-    cookie = 'deviceid=Wb05a8345fbc84530a38f9d3ff1857436; zh_choose=t; fxbdLocal=zh_CH; JSESSIONID=3876EE3EB9C6F6FE2A5B9E0DDACEB775'
-    course_id = 17680
-    examinee = Examinee(cookie=cookie, course_id=course_id)
-    examinee.full_process()
+    with open('configs.yaml', 'r') as stream:
+        configs = yaml.safe_load(stream)
+        examinee = Examinee(cookie=configs['cookie'], course_id=configs['course_id'])
+        examinee.full_process()
 
 
 if __name__ == '__main__':
