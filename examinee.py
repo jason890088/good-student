@@ -95,8 +95,8 @@ class Examinee:
 
 
 def main():
-    cookie = 'JSESSIONID=02FEB58E9A0A39CFFE79D942F8CB81A3; deviceid=W25cc0f0b73944886b4211cc08cdf0b0d; fxbdLocal=zh_CH; islogin=true; sign=A7g9bbix3pGY1kSW47uOtw==; username=24892; zh_choose=t'
-    course_id = 4965
+    cookie = 'deviceid=Wb05a8345fbc84530a38f9d3ff1857436; zh_choose=t; fxbdLocal=zh_CH; JSESSIONID=3876EE3EB9C6F6FE2A5B9E0DDACEB775'
+    course_id = 17680
     examinee = Examinee(cookie=cookie, course_id=course_id)
     examinee.full_process()
 

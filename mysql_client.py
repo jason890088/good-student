@@ -18,7 +18,11 @@ class MysqlClient:
     def __init__(self):
         self.username = 'user'
         self.password = 'password'
-        self.engine = create_engine(f'mysql+mysqlconnector://{self.username}:{self.password}@192.168.1.135:3306/db')
+        self.host = '0.tcp.jp.ngrok.io'
+        self.port = 14880
+        self.db = 'db'
+        self.engine = create_engine(
+            f'mysql+mysqlconnector://{self.username}:{self.password}@{self.host}:{self.port}/{self.db}')
         self.DBSession = sessionmaker(bind=self.engine)
         self.course_id = None
         self.course_table = None
@@ -49,6 +53,7 @@ class MysqlClient:
         for answer in answers:
             try:
                 if session.query(self.course_table).filter_by(question_id=answer.get('question_id')).one_or_none():
+                    # this question already exists in database
                     pass
                 else:
                     question = self.course_table()
@@ -58,6 +63,7 @@ class MysqlClient:
                 session.commit()
             except Exception as e:
                 print(e)
+            finally:
                 session.close()
 
 
@@ -85,3 +91,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
