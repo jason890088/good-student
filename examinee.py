@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 from mysql_client import MysqlClient
 from logger import logger
 import yaml
+import time
+import random
 
 
 class Examinee:
@@ -29,6 +31,11 @@ class Examinee:
         logger.info(f'開始測驗')
         questions, answers = self.get_questions()
         logger.info(f'成功獲取題目與答案')
+        answer_time = random.randint(10, 20)
+        logger.info(f'隨機等待{answer_time}秒')
+        for i in range(answer_time):
+            logger.info(f'作答中 {i}')
+            time.sleep(1)
         exam_result = self.do_exam(questions, answers)
         logger.info(f'考試完成')
         logger.info(f'開始更新題庫')
