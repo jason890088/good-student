@@ -24,7 +24,7 @@ class MysqlClient:
         self.username = username or 'user'
         self.password = password or 'password'
         self.host = host or '0.tcp.jp.ngrok.io'
-        self.port = port or 14880
+        self.port = port or 13785
         self.db = db or 'db'
         self.engine = create_engine(
             f'mysql+mysqlconnector://{self.username}:{self.password}@{self.host}:{self.port}/{self.db}')
