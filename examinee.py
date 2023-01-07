@@ -8,10 +8,10 @@ import random
 
 
 class Examinee:
-    def __init__(self, cookie, course_id):
+    def __init__(self, cookie=None, course_id=None, mysql_client=None):
         self.cookie = cookie
         self.course_id = course_id
-        self.mc = MysqlClient()
+        self.mysql_client = mysql_client or MysqlClient()
         self.set_course_id(self.course_id)
         self.headers = {
             'sec-ch-ua': '"Not?A_Brand";v="8", "Chromium";v="108", "Google Chrome";v="108"',
@@ -25,7 +25,7 @@ class Examinee:
 
     def set_course_id(self, course_id):
         self.course_id = course_id
-        self.mc.set_course_id(course_id)
+        self.mysql_client.set_course_id(course_id)
 
     def full_process(self):
         logger.info(f'開始測驗')
@@ -48,7 +48,7 @@ class Examinee:
 
         response = requests.request('GET', url, headers=headers)
         questions = BeautifulSoup(response.text, 'html.parser')
-        return questions, self.mc.get_answers()
+        return questions, self.mysql_client.get_answers()
 
     def do_exam(self, questions, answers):
         url = f'https://iedu.foxconn.com/public/play/submitExam'
@@ -92,7 +92,7 @@ class Examinee:
                 'question_id': question.select_one('input', {'disabled': ''}).get('name'),
                 'answer': self.answer_transform(answer.getText())
             })
-        self.mc.insert_answers(answers)
+        self.mysql_client.insert_answers(answers)
 
     @staticmethod
     def answer_transform(answer):
@@ -107,7 +107,8 @@ class Examinee:
 def main():
     with open('configs.yaml', 'r') as stream:
         configs = yaml.safe_load(stream)
-        examinee = Examinee(cookie=configs['cookie'], course_id=configs['course_id'])
+        mysql_client = MysqlClient(host=configs['host'], port=configs['port'])
+        examinee = Examinee(cookie=configs['cookie'], course_id=configs['course_id'], mysql_client=mysql_client)
         examinee.full_process()
 
 
