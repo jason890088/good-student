@@ -5,6 +5,7 @@ from logger import logger
 import yaml
 import time
 import random
+import re
 
 
 class Examinee:
@@ -100,8 +101,11 @@ class Examinee:
             return '1'
         elif answer == '错误':
             return '0'
-        else:
+        elif re.match('^[A-Z]*$', answer):
             return str(answer)
+        else:
+            logger.error(f'答案提取錯誤,請聯絡管理員')
+            return None
 
 
 def main():
