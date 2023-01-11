@@ -32,7 +32,7 @@ class Examinee:
         logger.info(f'開始測驗')
         questions, answers = self.get_questions()
         logger.info(f'成功獲取題目與答案')
-        answer_time = random.randint(10, 20)
+        answer_time = random.randint(15, 20)
         logger.info(f'隨機等待{answer_time}秒')
         for i in range(answer_time):
             logger.info(f'作答中 {i}')
@@ -49,7 +49,11 @@ class Examinee:
 
         response = requests.request('GET', url, headers=headers)
         questions = BeautifulSoup(response.text, 'html.parser')
-        return questions, self.mysql_client.get_answers()
+        if questions.find('input', {'name': 'examToken'}):
+            return questions, self.mysql_client.get_answers()
+        else:
+            logger.error('無法獲取題目,請檢查cookie或聯絡管理員')
+            raise Exception('獲取題目失敗')
 
     def do_exam(self, questions, answers):
         url = f'https://iedu.foxconn.com/public/play/submitExam'
