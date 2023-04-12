@@ -2,7 +2,7 @@
 
 ## Prerequisites
 1. 請先安裝[Poetry](https://python-poetry.org/docs/)
-2. 請將富學寶典網頁語言設置為`簡體中文`
+2. 請將網頁語言設置為`簡體中文`
 3. 聯絡Jason取得資料庫資訊，或者使用mysql資料夾內的docker compose
 4. 當個好學生
 
