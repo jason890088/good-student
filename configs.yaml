@@ -1,4 +1,4 @@
-cookie: 'deviceid=W26e4990cbbf7477882020a079e7d140e; zh_choose=t; islogin=true; username=24892; sign=nrdClv6ntdMCVgP9EecvRA==; JSESSIONID=F105AFC39E17A08A4BE9AA83F1FDCB9B; fxbdLocal=zh_CH'
-course_id: 17680
-host: '0.tcp.jp.ngrok.io'
-port: 10201
+cookie: "deviceid=W6dc73e7872d4449692b4e14dbc4efd6f; zh_choose=s; fxbdLocal=zh_CH; JSESSIONID=3670068A56BB3FB5144DFBDCED2A0BEC"
+course_id: 37438
+mysql_host: "localhost"
+mysql_port: 3306
