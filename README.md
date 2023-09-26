@@ -14,3 +14,5 @@ $ poetry install
 # 更改configs內的cookie以及course_id
 $ python3 examinee.py
 ```
+
+- Firefox可安裝插鍵避免滑鼠離開時課程播放中斷： https://addons.mozilla.org/en-US/firefox/addon/always-visible/
