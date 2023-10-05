@@ -50,6 +50,7 @@ class Examinee:
         response = requests.request("GET", url, headers=headers)
         questions = BeautifulSoup(response.text, "html.parser")
         if questions.find("input", {"name": "examToken"}):
+            logger.info(f"課程名稱：{questions.find('h2').text}")
             return questions, self.mysql_client.get_answers()
         else:
             logger.error("無法獲取題目,請檢查cookie或聯絡管理員")
